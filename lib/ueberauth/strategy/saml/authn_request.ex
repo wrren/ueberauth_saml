@@ -64,4 +64,7 @@ defmodule Ueberauth.Strategy.SAML.AuthNRequest do
       ])
     ]) |> generate
   end
+
+  def to_uri(%AuthNRequest{} = request) do
+  end
 end

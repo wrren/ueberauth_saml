@@ -20,7 +20,7 @@ defmodule Ueberauth.Strategy.SAML.Organization do
       element("md:OrganizationName", %{}, org.name),
       element("md:OrganizationDisplayName", %{}, org.display_name),
       element("md:OrganizationURL", %{}, org.url)
-    ]) |> generate
+    ])
   end
 
   def to_xml(%Organization{} = org) do
