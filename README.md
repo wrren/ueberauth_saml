@@ -2,6 +2,8 @@
 
 > SAML 2.0 strategy for Überauth.
 
+**Currently in development, not yet functional. Stay tuned for updates!**
+
 ## Installation
 
 1. Add `:ueberauth_saml` to your list of dependencies in `mix.exs`:
