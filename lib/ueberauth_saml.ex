@@ -6,7 +6,7 @@ defmodule UeberauthSAML do
 	
 	alias Ueberauth.Auth.Credentials
 	alias Ueberauth.Auth.Extra
-	alias Ueberauth.Strategy.SAML.AuthNRequest
+	alias SAML.AuthNRequest
 
 	def handle_request!(conn) do
 		redirect!(conn, AuthNRequest.init() |> AuthNRequest.to_uri())

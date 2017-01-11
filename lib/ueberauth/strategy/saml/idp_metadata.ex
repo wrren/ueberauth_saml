@@ -1,11 +1,11 @@
-defmodule Ueberauth.Strategy.SAML.IDPMetadata do
+defmodule SAML.IDPMetadata do
   @moduledoc """
   Provides a struct and functions for retrieving identity
   provider metadata.
   """
-  alias Ueberauth.Strategy.SAML.IDPMetadata
-  alias Ueberauth.Strategy.SAML.Organization
-  alias Ueberauth.Strategy.SAML.Contact
+  alias SAML.IDPMetadata
+  alias SAML.Organization
+  alias SAML.Contact
   
   require HTTPoison.Response
   require HTTPoison.Error

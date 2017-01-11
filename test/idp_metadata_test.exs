@@ -1,6 +1,6 @@
-defmodule Ueberauth.Strategy.SAML.IDPMetadataTest do
+defmodule SAML.IDPMetadataTest do
   use ExUnit.Case
-  alias Ueberauth.Strategy.SAML.IDPMetadata
+  alias SAML.IDPMetadata
 
   test "decode xml" do
     metadata = File.read!("./test/fixtures/idp_metadata.xml")

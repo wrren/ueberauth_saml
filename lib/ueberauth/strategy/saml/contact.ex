@@ -1,5 +1,5 @@
-defmodule Ueberauth.Strategy.SAML.Contact do
-  alias Ueberauth.Strategy.SAML.Contact
+defmodule SAML.Contact do
+  alias SAML.Contact
   import XmlBuilder
 
   defstruct name: "", email: ""
@@ -9,7 +9,7 @@ defmodule Ueberauth.Strategy.SAML.Contact do
   end
 
   def init() do
-    config = Keyword.fetch!(Application.get_env(:ueberauth, Ueberauth.Strategy.SAML.Metadata), :contact)
+    config = Keyword.fetch!(Application.get_env(:ueberauth, SAML.Metadata), :contact)
     init( Keyword.get(config, :name, ""),
           Keyword.get(config, :email, "") )
   end

@@ -1,4 +1,4 @@
-defmodule Ueberauth.Strategy.SAML.AuthNRequest do
+defmodule SAML.AuthNRequest do
   @moduledoc """
   Exposes a struct and functions for dealing with SAML 2.0 authn requests
   """
@@ -9,7 +9,7 @@ defmodule Ueberauth.Strategy.SAML.AuthNRequest do
             metadata_url: "",
             callback_url: ""
 
-  alias Ueberauth.Strategy.SAML.AuthNRequest
+  alias SAML.AuthNRequest
   import XmlBuilder
 
   @doc """
@@ -38,10 +38,10 @@ defmodule Ueberauth.Strategy.SAML.AuthNRequest do
 
   @doc """
   Initialize an AuthNRequest struct using attributes stored in the keyword list under the
-  configuration key :ueberauth, Ueberauth.Strategy.SAML
+  configuration key :ueberauth, SAML
   """
   def init() do
-    config = Application.get_env(:ueberauth, Ueberauth.Strategy.SAML)
+    config = Application.get_env(:ueberauth, SAML)
     init(Keyword.fetch!(config, :idp_url),
          Keyword.fetch!(config, :metadata_url),
          Keyword.fetch!(config, :callback_url))
@@ -51,6 +51,13 @@ defmodule Ueberauth.Strategy.SAML.AuthNRequest do
   Convert an AuthNRequest struct to an XML string suitable for transmission to an IDP
   """
   def to_xml(%AuthNRequest{} = request) do
+    request |> to_elements |> generate
+  end
+
+  @doc """
+  Generate an AuthNRequest XML element tree using the given request struct
+  """
+  def to_elements(%AuthNRequest{} = request) do
     element("saml:AuthnRequest", %{ "xmlns:samlp": "urn:oasis:names:tc:SAML:2.0:protocol",
                                     "xmlns:saml": "urn:oasis:names:tc:SAML:2.0:assertion",
                                     "Version": request.version,
@@ -62,9 +69,6 @@ defmodule Ueberauth.Strategy.SAML.AuthNRequest do
       element("saml:Subject", %{}, [
         element("saml:SubjectConfirmation", %{"Method": "urn:oasis:names:tc:SAML:2.0:cm:bearer"}, [])
       ])
-    ]) |> generate
-  end
-
-  def to_uri(%AuthNRequest{} = request) do
+    ]) 
   end
 end

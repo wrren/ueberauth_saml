@@ -1,5 +1,5 @@
-defmodule Ueberauth.Strategy.SAML.Organization do
-  alias Ueberauth.Strategy.SAML.Organization
+defmodule SAML.Organization do
+  alias SAML.Organization
   import XmlBuilder
 
   defstruct name: "", display_name: "", url: ""
@@ -9,7 +9,7 @@ defmodule Ueberauth.Strategy.SAML.Organization do
   end
 
   def init() do
-    config = Keyword.fetch!(Application.get_env(:ueberauth, Ueberauth.Strategy.SAML.Metadata), :organization)
+    config = Keyword.fetch!(Application.get_env(:ueberauth, SAML.Metadata), :organization)
     init( Keyword.get(config, :name, ""),
           Keyword.get(config, :display_name, ""),
           Keyword.get(config, :url, "") )
