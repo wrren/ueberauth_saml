@@ -1,6 +1,8 @@
 defmodule SAML.Contact do
   alias SAML.Contact
+  alias SAML.Namespace
   import XmlBuilder
+  import SweetXml
 
   defstruct name: "", email: ""
 
@@ -12,6 +14,15 @@ defmodule SAML.Contact do
     config = Keyword.fetch!(Application.get_env(:ueberauth, SAML.Metadata), :contact)
     init( Keyword.get(config, :name, ""),
           Keyword.get(config, :email, "") )
+  end
+
+  def decode(nil), do: %Contact{}
+  def decode(xpath_node) do
+    first_name = xpath_node |> xpath(Namespace.attach(~x"/md:ContactPerson/md:GivenName/text()"S)) |> String.trim
+    last_name = xpath_node |> xpath(Namespace.attach(~x"/md:ContactPerson/md:SurName/text()"S)) |> String.trim
+    email = xpath_node |> xpath(Namespace.attach(~x"/md:ContactPerson/md:EmailAddress/text()"S)) |> String.trim
+
+    struct(Contact, %{email: email, name: Enum.join([first_name, last_name], " ") |> String.trim()})
   end
 
   def to_elements(%Contact{} = contact) do

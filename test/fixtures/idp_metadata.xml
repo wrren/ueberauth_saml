@@ -14,4 +14,19 @@
     <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://idp.example.com/trust/saml2/http-post/sso/1"/>
     <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://idp.example.com/trust/saml2/soap/sso/1"/>
   </IDPSSODescriptor>
+  <Organization xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+      <OrganizationName xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+        SAML Identity Provider 
+      </OrganizationName>
+      <OrganizationDisplayName xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+        SAML Identity Provider @ Some Location
+      </OrganizationDisplayName>
+      <OrganizationURL xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+        http://www.idp.example.org/
+      </OrganizationURL>
+    </Organization>
+    <ContactPerson xmlns="urn:oasis:names:tc:SAML:2.0:metadata" contactType="technical">
+      <SurName xmlns="urn:oasis:names:tc:SAML:2.0:metadata">IDP Support</SurName>
+      <EmailAddress xmlns="urn:oasis:names:tc:SAML:2.0:metadata">mailto:saml-support@idp.example.org</EmailAddress>
+    </ContactPerson>
 </EntityDescriptor>

@@ -7,6 +7,36 @@ defmodule SAML do
     @saml_encoding "urn:oasis:names:tc:SAML:2.0:bindings:URL-Encoding:DEFLATE"
 
     @doc """
+    Normally the struct/2 function takes the struct type into which the map is to be converted
+    as the first parameter, making it awkward to use the |> operator. This function just reverses
+    the parameter order
+    """
+    def to_struct(map, type), do: struct(type, map)
+
+    @doc """
+    Decode a response message from the IDP
+    """
+    def decode_response(@saml_encoding, response) do
+        response
+        |> :base64.decode
+        |> :zlib.unzip
+        |> SweetXml.parse(namespace_conformant: true)
+    end
+
+    def decode_response(_, response) do
+        data = response
+        |> :base64.decode
+
+        xml = try do
+            :zlib.unzip(data)
+        catch
+            _ -> data
+        end
+
+        SweetXml.parse(xml, namespace_conformant: true)
+    end
+
+    @doc """
     Given a request or response XML message, a relay state and the full URL to the 
     IDP consumption endpoint, generate a url that includes the encoded XML message
     to which the user's browser can be redirected in order to send the message

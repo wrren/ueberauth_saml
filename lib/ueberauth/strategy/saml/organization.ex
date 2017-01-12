@@ -1,6 +1,8 @@
 defmodule SAML.Organization do
   alias SAML.Organization
+  alias SAML.Namespace
   import XmlBuilder
+  import SweetXml
 
   defstruct name: "", display_name: "", url: ""
 
@@ -21,6 +23,19 @@ defmodule SAML.Organization do
       element("md:OrganizationDisplayName", %{}, org.display_name),
       element("md:OrganizationURL", %{}, org.url)
     ])
+  end
+
+  def decode(nil), do: %Organization{}
+  def decode(xpath_node) do
+    org = xpath_node
+    |> xmap(
+        name: Namespace.attach(~x"./md:OrganizationName/text()"S),
+        display_name: Namespace.attach(~x"./md:OrganizationDisplayName/text()"S),
+        url: Namespace.attach(~x"./md:OrganizationURL/text()"S)
+      )
+    |> SAML.to_struct(Organization)
+
+    %{ org | name: String.trim(org.name), display_name: String.trim(org.display_name), url: String.trim(org.url) }
   end
 
   def to_xml(%Organization{} = org) do
