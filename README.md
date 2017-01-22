@@ -1,6 +1,7 @@
 # Überauth SAML
 
-> SAML 2.0 strategy for Überauth.
+> SAML 2.0 strategy for Überauth. Internally this library is an Elixir rewrite of [esaml](https://github.com/arekinath/esaml); 
+an erlang SAML 2.0 library.
 
 **Currently in development, not yet functional. Stay tuned for updates!**
 
