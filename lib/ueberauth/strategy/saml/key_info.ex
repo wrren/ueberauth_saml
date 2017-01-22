@@ -3,7 +3,7 @@ defmodule SAML.KeyInfo do
   import Record
 
   defstruct certificate: ""
-  defrecord :PrivateKeyInfo, extract(:PrivateKeyInfo, from_lib: "public_key/include/public_key.hrl")
+  defrecord :private_key_info, extract(:PrivateKeyInfo, from_lib: "public_key/include/public_key.hrl")
   
   def init(certificate) do
     %SAML.KeyInfo{certificate: certificate}
@@ -15,7 +15,7 @@ defmodule SAML.KeyInfo do
         {:ok, keyfile} = :file.read_file(path)
         [entry] = :public_key.pem_decode(keyfile)
         key = case :public_key.pem_entry_decode(entry) do
-          PrivateKeyInfo(privateKey: key_data) -> 
+          private_key_info(privateKey: key_data) -> 
             :public_key.der_decode(:RSAPrivateKey, :erlang.list_to_binary(key_data))
           other -> other
         end
