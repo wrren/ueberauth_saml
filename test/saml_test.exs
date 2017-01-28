@@ -3,7 +3,7 @@ defmodule SAMLTest do
   alias SAML.AuthNRequest
 
   test "encode to xml" do
-    uri = AuthNRequest.init("dest", "issuer", "cl", "2000-01-01T00:00:00Z" )
+    uri = AuthNRequest.init(%{login_location: "dest"}, %{metadata_url: "issuer"}, "cl", "2000-01-01T00:00:00Z" ) 
     |> AuthNRequest.to_elements
     |> SAML.encode_redirect("http://idp.example.com/endpoint", "1234")
 

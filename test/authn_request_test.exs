@@ -3,7 +3,7 @@ defmodule SAML.AuthNRequestTest do
   alias SAML.AuthNRequest
 
   test "request xml" do
-    request = AuthNRequest.init("dest", "issuer", "cl", "2000-01-01T00:00:00Z" ) 
+    request = AuthNRequest.init(%{login_location: "dest"}, %{metadata_url: "issuer"}, "cl", "2000-01-01T00:00:00Z" ) 
     |> AuthNRequest.to_xml 
     |> String.replace("\t", "") 
     |> String.replace("\n", "")
@@ -12,7 +12,7 @@ defmodule SAML.AuthNRequestTest do
   end
 
   test "url encoding without prior query parameters" do
-    uri = AuthNRequest.init("dest", "issuer", "cl", "2000-01-01T00:00:00Z" )
+    uri = AuthNRequest.init(%{login_location: "dest"}, %{metadata_url: "issuer"}, "cl", "2000-01-01T00:00:00Z" )
     |> AuthNRequest.to_elements
     |> SAML.encode_redirect("http://idp.example.com/endpoint", "1234")
 
@@ -20,7 +20,7 @@ defmodule SAML.AuthNRequestTest do
   end
 
   test "url encoding with prior query parameters" do
-    uri = AuthNRequest.init("dest", "issuer", "cl", "2000-01-01T00:00:00Z" )
+    uri = AuthNRequest.init(%{login_location: "dest"}, %{metadata_url: "issuer"}, "cl", "2000-01-01T00:00:00Z" )
     |> AuthNRequest.to_elements
     |> SAML.encode_redirect("http://idp.example.com/endpoint?foo=bar", "1234")
 
@@ -28,7 +28,7 @@ defmodule SAML.AuthNRequestTest do
   end
 
   test "HTTP POST encoding" do
-    html = AuthNRequest.init("dest", "issuer", "cl", "2000-01-01T00:00:00Z" )
+    html = AuthNRequest.init(%{login_location: "dest"}, %{metadata_url: "issuer"}, "cl", "2000-01-01T00:00:00Z" )
     |> AuthNRequest.to_elements
     |> SAML.encode_post("http://idp.example.com/endpoint", "1234")
     

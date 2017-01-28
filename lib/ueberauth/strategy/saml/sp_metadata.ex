@@ -19,9 +19,8 @@ defmodule SAML.SPMetadata do
             consumer_location: "",
             logout_location: ""
 
-  def init() do
-    config = Application.get_env(:ueberauth, SAML.Metadata)
-    
+  def init(options) do
+    struct(__MODULE__, options)  
   end 
 
   def to_xml(%SPMetadata{} = meta) do

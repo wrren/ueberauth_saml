@@ -41,7 +41,7 @@ defmodule SAML do
     IDP consumption endpoint, generate a url that includes the encoded XML message
     to which the user's browser can be redirected in order to send the message
     """
-    def encode_redirect(xml, idp_url, relay_state) do
+    def encode_redirect(xml, idp_url, relay_state \\ nil) do
         first_query_char = case has_query_params?(idp_url) do
             true    -> "&"
             false   -> "?"
@@ -52,11 +52,6 @@ defmodule SAML do
             false   -> "SAMLResponse"
         end
 
-        relay_state_enc = relay_state
-        |> :erlang.binary_to_list
-        |> :http_uri.encode
-        |> :erlang.list_to_binary
-
         xml_enc = xml
         |> generate
         |> :erlang.binary_to_list
@@ -65,7 +60,16 @@ defmodule SAML do
         |> :http_uri.encode
         |> :erlang.list_to_binary
 
-        Enum.join([idp_url, first_query_char, "SAMLEncoding=", @saml_encoding, "&", type, "=", xml_enc, "&RelayState=", relay_state_enc], "")
+        case relay_state do
+            nil ->
+                Enum.join([idp_url, first_query_char, "SAMLEncoding=", @saml_encoding, "&", type, "=", xml_enc], "")
+            _ ->
+                relay_state_enc = relay_state
+                |> :erlang.binary_to_list
+                |> :http_uri.encode
+                |> :erlang.list_to_binary
+                Enum.join([idp_url, first_query_char, "SAMLEncoding=", @saml_encoding, "&", type, "=", xml_enc, "&RelayState=", relay_state_enc], "")
+        end
     end
 
     @doc """
