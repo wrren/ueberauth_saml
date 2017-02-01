@@ -19,7 +19,7 @@ defmodule SAML.AuthNRequest do
   callback_url: Callback URI on the service provider that will consumer the response
   issue_instant: ISO8601 string describing the point in time at which the request was created
   """
-  def init(idp_metadata, sp_metadata, callback_url, id \\ UUID.uuid1(), %DateTime{} = issue_instant) do
+  def init(idp_metadata, _sp_metadata, callback_url, id \\ UUID.uuid1(), %DateTime{} = issue_instant) do
     %AuthNRequest{  issue_instant: SAML.datetime_format(issue_instant),
                     id: id,
                     destination: idp_metadata.login_location,

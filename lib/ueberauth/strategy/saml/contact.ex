@@ -1,6 +1,5 @@
 defmodule SAML.Contact do
   alias SAML.Contact
-  alias SAML.Namespace
   import SAML.XML
   import XmlBuilder
 

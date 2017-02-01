@@ -6,11 +6,9 @@ defmodule Ueberauth.Strategy.SAML do
 	
 	alias Ueberauth.Auth.Info
   alias Ueberauth.Auth.Credentials
-  alias Ueberauth.Auth.Extra
 	alias Ueberauth.Strategy.Helpers
 	alias SAML.AuthNRequest
-
-  import Logger
+  alias SAML.Assertion
 
 	def handle_request!(conn) do
 		options 			= Helpers.options(conn)
@@ -21,15 +19,13 @@ defmodule Ueberauth.Strategy.SAML do
     uri = AuthNRequest.init(idp, sp, callback_url)
     |> AuthNRequest.to_uri
 		
-    Logger.info "Callback URL: #{callback_url}"
     redirect!(conn, uri)
 	end
 
 	def handle_callback!(%Plug.Conn{ params: %{"SAMLResponse" => response} } = conn) do
-		Logger.info "Received Response"
     assertion = response
     |> SAML.decode_response
-    |> SAML.Assertion.decode
+    |> Assertion.decode
 
     put_private(conn, :saml_assertion, assertion)
 	end
@@ -39,17 +35,20 @@ defmodule Ueberauth.Strategy.SAML do
   end
 
   def credentials(conn) do
-    
+    assertion = conn.private.saml_assertion
+    %Credentials{ expires: false,
+                  scopes: Assertion.attribute(assertion, "memberOf", []) }
   end
 
   def info(conn) do
     assertion = conn.private.saml_assertion
+    first_name = Assertion.attribute(assertion, "User.FirstName", "")
+    last_name = Assertion.attribute(assertion, "User.LastName", "")
     %Info{
-      name: assertion.subject.name
+      name: String.trim(Enum.join([first_name, last_name], " ")),
+      first_name: first_name,
+      last_name: last_name,
+      email: Assertion.attribute(assertion, "User.email", "")
     }
-  end
-
-  def extra(conn) do
-    
   end
 end

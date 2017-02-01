@@ -1,6 +1,5 @@
 defmodule SAML.Organization do
   alias SAML.Organization
-  alias SAML.Namespace
   import XmlBuilder
   import SAML.XML
 

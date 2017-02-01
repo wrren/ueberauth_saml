@@ -40,7 +40,7 @@ defmodule SAML do
         xml = try do
             :zlib.unzip(data)
         rescue
-            e in ErlangError -> data
+            _ in ErlangError -> data
         end
 
         SweetXml.parse(xml, namespace_conformant: true)
@@ -120,14 +120,14 @@ defmodule SAML do
     Given the root element of an XML document that denotes a SAML request or response,
     determine whether the XML represents a request and, if so, return true. False otherwise.
     """
-    defp is_request?({name, _, _}) do
+    def is_request?({name, _, _}) do
         String.contains? name, "Request"
     end
 
     @doc """
     Determine whether a URL already contains query parameters
     """
-    defp has_query_params?(url) do
+    def has_query_params?(url) do
         String.contains? url, "?"
     end
 
