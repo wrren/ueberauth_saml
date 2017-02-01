@@ -1,6 +1,5 @@
-defmodule SAML.Conditions do
-  import SweetXml
-  import SAML.Namespace, only: [attach: 1]
+defmodule SAML.Condition do
+  import SAML.XML
 
   defstruct not_before: nil,
             not_on_or_after: nil,
@@ -10,7 +9,7 @@ defmodule SAML.Conditions do
     xpath_node
     |> xmap(  not_before: ~x"./@NotBefore"so,
               not_on_or_after: ~x"./@NotOnOrAfter"so,
-              audience: attach(~x"./saml:AudienceRestriction/saml:Audience/text()"so) )
-    |> SAML.to_struct(SAML.Conditions)
+              audience: ~x"./saml:AudienceRestriction/saml:Audience/text()"so )
+    |> SAML.to_struct(SAML.Condition)
   end
 end

@@ -3,19 +3,17 @@ defmodule SAMLTest do
   alias SAML.AuthNRequest
 
   test "encode to xml" do
-    uri = AuthNRequest.init(%{login_location: "dest"}, %{metadata_url: "issuer"}, "cl", "2000-01-01T00:00:00Z" ) 
+    {:ok, dt} = DateTime.from_unix(0)
+    uri = AuthNRequest.init(%{login_location: "dest"}, %{}, "cl", "1234", dt )
     |> AuthNRequest.to_elements
     |> SAML.encode_redirect("http://idp.example.com/endpoint", "1234")
 
-    assert uri == "http://idp.example.com/endpoint?SAMLEncoding=urn:oasis:names:tc:SAML:2.0:bindings:URL-Encoding:DEFLATE&SAMLRequest=fVHBTsMwDD3DV0S5j4Ydo7bSgAOTNlGthQO3NDUsqHFGnCA%2BnzRsUnepZMl61vOz%2FVySsqPcxHDEA3xHoMA2ROCDcfjokKIF34L%2FMRpeD7uK65Gzp8QyqCZKxYcEONsSRdgiBYWh4mshxErcp%2BiEkDneOWu8C0678cHgYPCz4tGjdIoMSVQWSAYt281%2BJ9d3Qvb%2FJJLPXdesmpe24%2BwNPOWZicDZrx2R5LT%2BspK6nDNvOS33nM6r8vr2pswO5QN9bXIqi3ntQmlj%2FwU6JHxdSDZ%2BGG%2BzX2wP4eiG5enayh6UB8%2BLSby4Vj%2Fj%2BcvqPw%3D%3D&RelayState=1234"
+    assert uri == "http://idp.example.com/endpoint?SAMLEncoding=urn:oasis:names:tc:SAML:2.0:bindings:URL-Encoding:DEFLATE&SAMLRequest=fVHBTgIxED3LVzS9w5bVRG3YJSgxkkAk7OLBi%2Bl2R6nZtthpiZ9vdxcSuJDMofM68%2Fre62T6pxtyAIfKmoyOR4wSMNLWynxndFu%2BDB8omeaDCQrd7Pks%2BJ3ZwG8A9GSGCM7HvWdrMGhwBbiDkrDdLDMqG0rmcUoZ4TvqOjaULObxkfT2Lp4QAywMemF8xB7v2ZCNY5WM8a4%2BKFk76620zZMyvaDgDLcCFXIjNCD3khez1ZKnI8arfgj5a1muh%2Bu3oqTk%2FWQsbY1FqwZ56%2BQ6kzgZO1%2FZX9%2FZH6XSfHDThcU7gy4PUIETMbfPFp0k53en0SJUPyB97C%2BBGOyXcrpLkKzA72x9XYXUvALhwNGkJU8u2fv%2B8hfzfw%3D%3D&RelayState=1234"
   end
 
   test "decode from xml" do
-    data = "fVHBTsMwDD3DV0S5j4Ydo7bSgAOTNlGthQO3NDUsqHFGnCA%2BnzRsUnepZMl61vOz%2FVySsqPcxHDEA3xHoMA2ROCDcfjokKIF34L%2FMRpeD7uK65Gzp8QyqCZKxYcEONsSRdgiBYWh4mshxErcp%2BiEkDneOWu8C0678cHgYPCz4tGjdIoMSVQWSAYt281%2BJ9d3Qvb%2FJJLPXdesmpe24%2BwNPOWZicDZrx2R5LT%2BspK6nDNvOS33nM6r8vr2pswO5QN9bXIqi3ntQmlj%2FwU6JHxdSDZ%2BGG%2BzX2wP4eiG5enayh6UB8%2BLSby4Vj%2Fj%2BcvqPw%3D%3D"
-    |> :erlang.binary_to_list
-    |> :http_uri.decode
-    |> :erlang.list_to_binary
+    data = "PHNhbWxwOkF1dGhuUmVxdWVzdCBBc3NlcnRpb25Db25zdW1lclNlcnZpY2VVUkw9ImNsIiBEZXN0aW5hdGlvbj0iZGVzdCIgSUQ9IjEyMzQiIElzc3VlSW5zdGFudD0iMTk3MC0wMS0wMVQwMDowMDowMFoiIFByb3RvY29sQmluZGluZz0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmJpbmRpbmdzOkhUVFAtUE9TVCIgVmVyc2lvbj0iMi4wIiB4bWxuczpzYW1sPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIiB4bWxuczpzYW1scD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOnByb3RvY29sIj4KCTxzYW1sOklzc3Vlcj51ZWJlcmF1dGhfc2FtbDwvc2FtbDpJc3N1ZXI+Cgk8c2FtbDpTdWJqZWN0PgoJCTxzYW1sOlN1YmplY3RDb25maXJtYXRpb24gTWV0aG9kPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6Y206YmVhcmVyIi8+Cgk8L3NhbWw6U3ViamVjdD4KPC9zYW1scDpBdXRoblJlcXVlc3Q+"
 
-    assert :erlang.element(1, SAML.decode_response(:dummy_encoding, data)) == :xmlElement
+    assert :erlang.element(1, SAML.decode_response(data, :dummy_encoding)) == :xmlElement
   end
 end

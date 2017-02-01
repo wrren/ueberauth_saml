@@ -31,6 +31,8 @@ defmodule UeberauthSAML.Mixfile do
     [{:ueberauth, "~> 0.4"},
      {:xml_builder, "~> 0.0.9"},
      {:httpoison, "~> 0.11.0"},
-     {:sweet_xml, "~> 0.6.3"}]
+     {:sweet_xml, "~> 0.6.3"},
+     {:rsa, "~> 0.0.1"},
+     {:uuid, "~> 1.1"}]
   end
 end

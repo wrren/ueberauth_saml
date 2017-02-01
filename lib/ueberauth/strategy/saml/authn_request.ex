@@ -4,9 +4,9 @@ defmodule SAML.AuthNRequest do
   """
   
   defstruct version: "2.0",
+            id: "",
             issue_instant: "",
             destination: "",
-            metadata_url: "",
             callback_url: ""
 
   alias SAML.AuthNRequest
@@ -19,10 +19,10 @@ defmodule SAML.AuthNRequest do
   callback_url: Callback URI on the service provider that will consumer the response
   issue_instant: ISO8601 string describing the point in time at which the request was created
   """
-  def init(idp_metadata, sp_metadata, callback_url, issue_instant) do
-    %AuthNRequest{  issue_instant: issue_instant,
+  def init(idp_metadata, sp_metadata, callback_url, id \\ UUID.uuid1(), %DateTime{} = issue_instant) do
+    %AuthNRequest{  issue_instant: SAML.datetime_format(issue_instant),
+                    id: id,
                     destination: idp_metadata.login_location,
-                    metadata_url: sp_metadata.metadata_url,
                     callback_url: callback_url }
   end
 
@@ -33,7 +33,7 @@ defmodule SAML.AuthNRequest do
   callback_url: Callback URI on the service provider that will consumer the response
   """
   def init(idp_metadata, sp_metadata, callback_url) do
-    init(idp_metadata, sp_metadata, callback_url, DateTime.utc_now() |> DateTime.to_iso8601())
+    init(idp_metadata, sp_metadata, callback_url, UUID.uuid1(), DateTime.utc_now())
   end
 
   @doc """
@@ -47,21 +47,22 @@ defmodule SAML.AuthNRequest do
   Generate an AuthNRequest XML element tree using the given request struct
   """
   def to_elements(%AuthNRequest{} = request) do
-    element("saml:AuthnRequest", %{ "xmlns:samlp": "urn:oasis:names:tc:SAML:2.0:protocol",
+    element("samlp:AuthnRequest", %{ "xmlns:samlp": "urn:oasis:names:tc:SAML:2.0:protocol",
                                     "xmlns:saml": "urn:oasis:names:tc:SAML:2.0:assertion",
                                     "Version": request.version,
                                     "IssueInstant": request.issue_instant,
                                     "Destination": request.destination,
+                                    "ID": request.id,
                                     "ProtocolBinding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
                                     "AssertionConsumerServiceURL": request.callback_url }, [
-      element("saml:Issuer", %{}, request.metadata_url ),
+      element("saml:Issuer", %{}, "ueberauth_saml" ),
       element("saml:Subject", %{}, [
         element("saml:SubjectConfirmation", %{"Method": "urn:oasis:names:tc:SAML:2.0:cm:bearer"}, [])
       ])
     ]) 
   end
 
-  def to_url(%AuthNRequest{destination: dest} = request) do
+  def to_uri(%AuthNRequest{destination: dest} = request) do
     to_elements(request) |> SAML.encode_redirect(dest)
   end
 end

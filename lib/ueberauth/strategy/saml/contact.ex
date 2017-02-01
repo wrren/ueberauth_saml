@@ -1,8 +1,8 @@
 defmodule SAML.Contact do
   alias SAML.Contact
   alias SAML.Namespace
+  import SAML.XML
   import XmlBuilder
-  import SweetXml
 
   defstruct name: "", email: ""
 
@@ -18,9 +18,9 @@ defmodule SAML.Contact do
 
   def decode(nil), do: %Contact{}
   def decode(xpath_node) do
-    first_name = xpath_node |> xpath(Namespace.attach(~x"/md:ContactPerson/md:GivenName/text()"S)) |> String.trim
-    last_name = xpath_node |> xpath(Namespace.attach(~x"/md:ContactPerson/md:SurName/text()"S)) |> String.trim
-    email = xpath_node |> xpath(Namespace.attach(~x"/md:ContactPerson/md:EmailAddress/text()"S)) |> String.trim
+    first_name  = xpath_node |> xpath(~x"/md:ContactPerson/md:GivenName/text()"S)     |> String.trim
+    last_name   = xpath_node |> xpath(~x"/md:ContactPerson/md:SurName/text()"S)       |> String.trim
+    email       = xpath_node |> xpath(~x"/md:ContactPerson/md:EmailAddress/text()"S)  |> String.trim
 
     struct(Contact, %{email: email, name: Enum.join([first_name, last_name], " ") |> String.trim()})
   end

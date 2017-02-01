@@ -17,6 +17,7 @@ defmodule SAML.SPMetadata do
             cert_chain: [],
             entity_id: "",
             consumer_location: "",
+            metadata_url: "",
             logout_location: ""
 
   def init(options) do

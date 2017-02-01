@@ -14,27 +14,39 @@ defmodule SAML do
     def to_struct(map, type), do: struct(type, map)
 
     @doc """
+    Properly format a DateTime struct for transmission in a request
+    """
+    def datetime_format(%DateTime{} = dt) do
+        params = [dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second]
+        :io_lib.format("~4.10.0B-~2.10.0B-~2.10.0BT~2.10.0B:~2.10.0B:~2.10.0BZ", params)
+        |> :lists.flatten
+        |> :erlang.list_to_binary
+    end
+
+    @doc """
     Decode a response message from the IDP
     """
-    def decode_response(@saml_encoding, response) do
+    def decode_response(response, @saml_encoding) do
         response
         |> :base64.decode
         |> :zlib.unzip
         |> SweetXml.parse(namespace_conformant: true)
     end
 
-    def decode_response(_, response) do
+    def decode_response(response, _) do
         data = response
         |> :base64.decode
 
         xml = try do
             :zlib.unzip(data)
-        catch
-            _ -> data
+        rescue
+            e in ErlangError -> data
         end
 
         SweetXml.parse(xml, namespace_conformant: true)
     end
+
+    def decode_response(response), do: decode_response(response, @saml_encoding)
 
     @doc """
     Given a request or response XML message, a relay state and the full URL to the 
@@ -53,7 +65,7 @@ defmodule SAML do
         end
 
         xml_enc = xml
-        |> generate
+        |> doc
         |> :erlang.binary_to_list
         |> :zlib.zip
         |> :base64.encode_to_string
@@ -77,7 +89,7 @@ defmodule SAML do
     IDP consumption endpoint, generate a HTML page that POST's the message on behalf
     of the user using a javascript onload event.
     """
-    def encode_post(xml, idp_url, relay_state) do
+    def encode_post(xml, idp_url, relay_state \\ nil) do
         type = case is_request?(xml) do
             true    -> "SAMLRequest"
             false   -> "SAMLResponse"
@@ -117,5 +129,22 @@ defmodule SAML do
     """
     defp has_query_params?(url) do
         String.contains? url, "?"
+    end
+
+    @doc """
+    Utility function that enumerates over a map-type variable and removes all whitespace and 
+    carriage-returns from their values
+    """
+    def trim(string) when is_binary(string) do
+      string
+      |> String.trim
+      |> String.replace("\t", "") 
+      |> String.replace("\n", "")
+      |> String.replace("\r", "")
+    end
+    def trim(enumerable) do
+        Enum.map(enumerable, fn {key, value} when is_binary(value) -> 
+          {key, trim(value)} 
+          {key, value} -> {key, value} end)
     end
 end

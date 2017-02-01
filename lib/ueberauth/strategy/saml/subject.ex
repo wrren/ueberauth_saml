@@ -1,6 +1,5 @@
 defmodule SAML.Subject do
-  import SweetXml
-  import SAML.Namespace, only: [attach: 1]
+  import SAML.XML
 
   defstruct name: "",
             confirmation_method: :bearer,
@@ -9,9 +8,9 @@ defmodule SAML.Subject do
   def decode(xpath_node) do
     xpath_node
     |> xmap(
-      name: attach(~x"./saml:NameID/text()"),
-      confirmation_method: attach(~x"./saml:SubjectConfirmation/@Method" ) |> transform_by(&SAML.Subject.subject_method_map/1),
-      not_on_or_after: attach(~x"./saml:SubjectConfirmation/saml:SubjectConfirmationData/@NotOnOrAfter") )
+      name: ~x"./saml:NameID/text()"s,
+      confirmation_method: ~x"./saml:SubjectConfirmation/@Method" |> transform_by(&SAML.Subject.subject_method_map/1),
+      not_on_or_after: ~x"./saml:SubjectConfirmation/saml:SubjectConfirmationData/@NotOnOrAfter" )
     |> SAML.to_struct(SAML.Subject)
   end
 

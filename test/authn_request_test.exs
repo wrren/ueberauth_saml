@@ -3,7 +3,8 @@ defmodule SAML.AuthNRequestTest do
   alias SAML.AuthNRequest
 
   test "request xml" do
-    request = AuthNRequest.init(%{login_location: "dest"}, %{metadata_url: "issuer"}, "cl", "2000-01-01T00:00:00Z" ) 
+    {:ok, dt} = DateTime.from_unix(0)
+    request = AuthNRequest.init(%{login_location: "dest"}, %{}, "cl", "1234", dt ) 
     |> AuthNRequest.to_xml 
     |> String.replace("\t", "") 
     |> String.replace("\n", "")
@@ -12,23 +13,26 @@ defmodule SAML.AuthNRequestTest do
   end
 
   test "url encoding without prior query parameters" do
-    uri = AuthNRequest.init(%{login_location: "dest"}, %{metadata_url: "issuer"}, "cl", "2000-01-01T00:00:00Z" )
+    {:ok, dt} = DateTime.from_unix(0)
+    uri = AuthNRequest.init(%{login_location: "dest"}, %{}, "cl", "1234", dt )
     |> AuthNRequest.to_elements
     |> SAML.encode_redirect("http://idp.example.com/endpoint", "1234")
 
-    assert uri == "http://idp.example.com/endpoint?SAMLEncoding=urn:oasis:names:tc:SAML:2.0:bindings:URL-Encoding:DEFLATE&SAMLRequest=fVHBTsMwDD3DV0S5j4Ydo7bSgAOTNlGthQO3NDUsqHFGnCA%2BnzRsUnepZMl61vOz%2FVySsqPcxHDEA3xHoMA2ROCDcfjokKIF34L%2FMRpeD7uK65Gzp8QyqCZKxYcEONsSRdgiBYWh4mshxErcp%2BiEkDneOWu8C0678cHgYPCz4tGjdIoMSVQWSAYt281%2BJ9d3Qvb%2FJJLPXdesmpe24%2BwNPOWZicDZrx2R5LT%2BspK6nDNvOS33nM6r8vr2pswO5QN9bXIqi3ntQmlj%2FwU6JHxdSDZ%2BGG%2BzX2wP4eiG5enayh6UB8%2BLSby4Vj%2Fj%2BcvqPw%3D%3D&RelayState=1234"
+    assert uri == "http://idp.example.com/endpoint?SAMLEncoding=urn:oasis:names:tc:SAML:2.0:bindings:URL-Encoding:DEFLATE&SAMLRequest=fVHBTgIxED3LVzS9w5bVRG3YJSgxkkAk7OLBi%2Bl2R6nZtthpiZ9vdxcSuJDMofM68%2Fre62T6pxtyAIfKmoyOR4wSMNLWynxndFu%2BDB8omeaDCQrd7Pks%2BJ3ZwG8A9GSGCM7HvWdrMGhwBbiDkrDdLDMqG0rmcUoZ4TvqOjaULObxkfT2Lp4QAywMemF8xB7v2ZCNY5WM8a4%2BKFk76620zZMyvaDgDLcCFXIjNCD3khez1ZKnI8arfgj5a1muh%2Bu3oqTk%2FWQsbY1FqwZ56%2BQ6kzgZO1%2FZX9%2FZH6XSfHDThcU7gy4PUIETMbfPFp0k53en0SJUPyB97C%2BBGOyXcrpLkKzA72x9XYXUvALhwNGkJU8u2fv%2B8hfzfw%3D%3D&RelayState=1234"
   end
 
   test "url encoding with prior query parameters" do
-    uri = AuthNRequest.init(%{login_location: "dest"}, %{metadata_url: "issuer"}, "cl", "2000-01-01T00:00:00Z" )
+    {:ok, dt} = DateTime.from_unix(0)
+    uri = AuthNRequest.init(%{login_location: "dest"}, %{}, "cl", "1234", dt )
     |> AuthNRequest.to_elements
     |> SAML.encode_redirect("http://idp.example.com/endpoint?foo=bar", "1234")
 
-    assert uri == "http://idp.example.com/endpoint?foo=bar&SAMLEncoding=urn:oasis:names:tc:SAML:2.0:bindings:URL-Encoding:DEFLATE&SAMLRequest=fVHBTsMwDD3DV0S5j4Ydo7bSgAOTNlGthQO3NDUsqHFGnCA%2BnzRsUnepZMl61vOz%2FVySsqPcxHDEA3xHoMA2ROCDcfjokKIF34L%2FMRpeD7uK65Gzp8QyqCZKxYcEONsSRdgiBYWh4mshxErcp%2BiEkDneOWu8C0678cHgYPCz4tGjdIoMSVQWSAYt281%2BJ9d3Qvb%2FJJLPXdesmpe24%2BwNPOWZicDZrx2R5LT%2BspK6nDNvOS33nM6r8vr2pswO5QN9bXIqi3ntQmlj%2FwU6JHxdSDZ%2BGG%2BzX2wP4eiG5enayh6UB8%2BLSby4Vj%2Fj%2BcvqPw%3D%3D&RelayState=1234"
+    assert uri == "http://idp.example.com/endpoint?foo=bar&SAMLEncoding=urn:oasis:names:tc:SAML:2.0:bindings:URL-Encoding:DEFLATE&SAMLRequest=fVHBTgIxED3LVzS9w5bVRG3YJSgxkkAk7OLBi%2Bl2R6nZtthpiZ9vdxcSuJDMofM68%2Fre62T6pxtyAIfKmoyOR4wSMNLWynxndFu%2BDB8omeaDCQrd7Pks%2BJ3ZwG8A9GSGCM7HvWdrMGhwBbiDkrDdLDMqG0rmcUoZ4TvqOjaULObxkfT2Lp4QAywMemF8xB7v2ZCNY5WM8a4%2BKFk76620zZMyvaDgDLcCFXIjNCD3khez1ZKnI8arfgj5a1muh%2Bu3oqTk%2FWQsbY1FqwZ56%2BQ6kzgZO1%2FZX9%2FZH6XSfHDThcU7gy4PUIETMbfPFp0k53en0SJUPyB97C%2BBGOyXcrpLkKzA72x9XYXUvALhwNGkJU8u2fv%2B8hfzfw%3D%3D&RelayState=1234"
   end
 
   test "HTTP POST encoding" do
-    html = AuthNRequest.init(%{login_location: "dest"}, %{metadata_url: "issuer"}, "cl", "2000-01-01T00:00:00Z" )
+    {:ok, dt} = DateTime.from_unix(0)
+    html = AuthNRequest.init(%{login_location: "dest"}, %{}, "cl", "1234", dt )
     |> AuthNRequest.to_elements
     |> SAML.encode_post("http://idp.example.com/endpoint", "1234")
     

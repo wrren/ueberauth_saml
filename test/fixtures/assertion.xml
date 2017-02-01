@@ -1,0 +1,59 @@
+<samlp:Response 
+  xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" 
+  xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" ID="R00871c81b43b42c424e727bb0c822383486fc4ee" Version="2.0" IssueInstant="2017-01-30T21:50:10Z" Destination="idp.example.com" InResponseTo="1289162a-e736-11e6-8f17-f45c898b08a3">
+  <saml:Issuer>https://app.onelogin.com/saml/metadata/1</saml:Issuer>
+  <samlp:Status>
+    <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
+  </samlp:Status>
+  <saml:Assertion 
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2.0" ID="pfx598d1bca-e8ef-92f4-1db8-3847a1e4c830" IssueInstant="2017-01-30T21:50:10Z">
+    <saml:Issuer>https://app.onelogin.com/saml/metadata/1</saml:Issuer>
+    <saml:Subject>
+      <saml:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress">jdoe@example.com</saml:NameID>
+      <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+        <saml:SubjectConfirmationData NotOnOrAfter="2017-01-30T21:53:10Z" Recipient="idp.example.com" InResponseTo="1289162a-e736-11e6-8f17-f45c898b08a3"/>
+      </saml:SubjectConfirmation>
+    </saml:Subject>
+    <saml:Conditions NotBefore="2017-01-30T21:47:10Z" NotOnOrAfter="2017-01-30T21:53:10Z">
+      <saml:AudienceRestriction>
+        <saml:Audience>idp.example.com</saml:Audience>
+      </saml:AudienceRestriction>
+    </saml:Conditions>
+    <saml:AuthnStatement AuthnInstant="2017-01-30T21:50:09Z" SessionNotOnOrAfter="2017-01-31T21:50:10Z" SessionIndex="_da13d270-c94e-0134-0cad-0aae00dce8d7">
+      <saml:AuthnContext>
+        <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef>
+      </saml:AuthnContext>
+    </saml:AuthnStatement>
+    <saml:AttributeStatement>
+      <saml:Attribute Name="PersonImmutableID" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string"/>
+      </saml:Attribute>
+      <saml:Attribute Name="User.LastName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Doe
+        </saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="User.FirstName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">John
+        </saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="User.email" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">jdoe@example.com
+        </saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="memberOf" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">DomainAdmins
+        </saml:AttributeValue>
+        <saml:AttributeValue 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Users
+        </saml:AttributeValue>
+      </saml:Attribute>
+    </saml:AttributeStatement>
+  </saml:Assertion>
+</samlp:Response>
