@@ -26,14 +26,7 @@ defmodule SAML do
     @doc """
     Decode a response message from the IDP
     """
-    def decode_response(response, @saml_encoding) do
-        response
-        |> :base64.decode
-        |> :zlib.unzip
-        |> SweetXml.parse(namespace_conformant: true)
-    end
-
-    def decode_response(response, _) do
+    def decode_response(response) do
         data = response
         |> :base64.decode
 
@@ -45,8 +38,6 @@ defmodule SAML do
 
         SweetXml.parse(xml, namespace_conformant: true)
     end
-
-    def decode_response(response), do: decode_response(response, @saml_encoding)
 
     @doc """
     Given a request or response XML message, a relay state and the full URL to the 
