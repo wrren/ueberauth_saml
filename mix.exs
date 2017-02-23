@@ -14,8 +14,7 @@ defmodule UeberauthSAML.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :httpoison],
-     mod: {SAML.Supervisor, []}]
+    [applications: [:logger, :esaml]]
   end
 
   # Dependencies can be Hex packages:
@@ -29,10 +28,7 @@ defmodule UeberauthSAML.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:ueberauth, "~> 0.4"},
-     {:xml_builder, "~> 0.0.9"},
-     {:httpoison, "~> 0.11.0"},
-     {:sweet_xml, "~> 0.6.3"},
-     {:rsa, "~> 0.0.1"},
-     {:uuid, "~> 1.1"}]
+     {:cowboy, "~> 1.0.1 or ~> 1.1", override: true},
+     {:esaml, git: "git://github.com/wrren/esaml.git"}]
   end
 end
