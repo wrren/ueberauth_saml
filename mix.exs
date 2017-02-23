@@ -28,7 +28,6 @@ defmodule UeberauthSAML.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:ueberauth, "~> 0.4"},
-     {:cowboy, "~> 1.0.1 or ~> 1.1", override: true},
      {:esaml, git: "git://github.com/wrren/esaml.git", branch: "ueberauth_saml"}]
   end
 end
