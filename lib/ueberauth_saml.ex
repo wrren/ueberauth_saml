@@ -77,7 +77,7 @@ defmodule Ueberauth.Strategy.SAML do
     name
   end
 
-  def credentials(conn) do
+  def credentials(_) do
     %Credentials{ expires: false }
   end
 
