@@ -1,7 +1,6 @@
 # Überauth SAML
 
-> SAML 2.0 strategy for Überauth. Internally this library is an Elixir rewrite of [esaml](https://github.com/arekinath/esaml); 
-an erlang SAML 2.0 library.
+> SAML 2.0 strategy for Überauth.
 
 Currently Überauth SAML parses the IDP response and pulls a static set of attributes from the included Subject assertion:
 
