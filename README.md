@@ -5,9 +5,9 @@ an erlang SAML 2.0 library.
 
 Currently Überauth SAML parses the IDP response and pulls a static set of attributes from the included Subject assertion:
 
-User.FirstName  -> auth.info.first_name
-User.LastName   -> auth.info.last_name
-User.email      -> auth.info.email
+* User.FirstName  -> auth.info.first_name
+* User.LastName   -> auth.info.last_name
+* User.email      -> auth.info.email
 
 Future versions of this strategy will allow mappings from attribute keys to fields in the info struct, for now this version is 
 tailored to work against OneLogin.
