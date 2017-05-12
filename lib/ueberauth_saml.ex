@@ -17,8 +17,10 @@ defmodule Ueberauth.Strategy.SAML do
   defrecord :esaml_idp_metadata,  extract(:esaml_idp_metadata,  from_lib: "esaml/include/esaml.hrl")
 
   def make_sp(conn, options) do
+    parent_application = Keyword.get(options, :application)
+    private_key_path    = Path.join(:code.priv_dir(parent_application), Keyword.get(options, :private_key))
     :esaml_sp.setup(esaml_sp(
-      key:                    :esaml_util.load_private_key(Keyword.get(options, :private_key)),
+      key:                    :esaml_util.load_private_key(private_key_path),
       trusted_fingerprints:   Keyword.get(options, :trusted_fingerprints),
       idp_signs_envelopes:    Keyword.get(options, :idp_signs_envelopes, false),
       idp_signs_assertions:   Keyword.get(options, :idp_signs_assertions, true),
