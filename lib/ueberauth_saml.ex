@@ -52,7 +52,7 @@ defmodule Ueberauth.Strategy.SAML do
                                                             url -> :esaml_util.load_metadata(:erlang.binary_to_list(url))
                                                           end
                                                           
-    signed_xml  = sp.generate_authn_request(login_location)
+    signed_xml  = :esaml_sp.generate_authn_request(sp, login_location)
     relay_state = Map.get(qp, "relay_state", "")
     url         = :esaml_binding.encode_http_redirect(login_location, signed_xml, relay_state)
     redirect!(conn, url)
