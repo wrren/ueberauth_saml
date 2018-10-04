@@ -52,7 +52,7 @@ defmodule Ueberauth.Strategy.SAML do
                                                             url -> :esaml_util.load_metadata(:erlang.binary_to_list(url))
                                                           end
                                                           
-    signed_xml  = :esaml_sp.generate_authn_request(sp, login_location)
+    signed_xml  = :esaml_sp.generate_authn_request(login_location, sp)
     relay_state = Map.get(qp, "relay_state", "")
     url         = :esaml_binding.encode_http_redirect(login_location, signed_xml, relay_state)
     redirect!(conn, url)
@@ -63,7 +63,7 @@ defmodule Ueberauth.Strategy.SAML do
 
     try do
       xml = :esaml_binding.decode_response(Map.get(params, "SAMLEncoding", :undefined), :erlang.binary_to_list(response))
-      case sp.validate_assertion(xml, fn(_a, _digest) -> :ok end) do
+      case :esaml_sp.validate_assertion(xml, fn(_a, _digest) -> :ok end, sp) do
           {:ok, assertion} ->
             put_private(conn, :saml_assertion, assertion)
           {:error, reason} -> 
