@@ -4,8 +4,7 @@ defmodule Ueberauth.Strategy.SAML do
 	"""
 	use Ueberauth.Strategy
 	
-	alias Ueberauth.Auth.Info
-  alias Ueberauth.Auth.Credentials
+  alias Ueberauth.Auth.{Extra, Info, Credentials}
 	alias Ueberauth.Strategy.Helpers
   import Record
 
@@ -81,6 +80,15 @@ defmodule Ueberauth.Strategy.SAML do
 
   def credentials(_) do
     %Credentials{ expires: false }
+  end
+
+  def extra(conn) do
+    esaml_assertion(attributes: attributes) = conn.private.saml_assertion
+    raw_info = attributes
+    |> Keyword.drop(["User.FirstName", "User.LastName", "User.email"])
+    |> Enum.into(%{})
+
+    %Extra{raw_info: raw_info}
   end
 
   def info(conn) do
